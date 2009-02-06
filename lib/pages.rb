@@ -121,6 +121,11 @@ module Pages
 
       @bot.make_request('move', post_me)
     end # move
+
+    # Flag whether the page is new or not.
+    def new?
+      @new
+    end
     
     # This method is used to protect (and unprotect!) pages. See the API for 
     # possible values. By default, it will lock a page to require sysop level 
