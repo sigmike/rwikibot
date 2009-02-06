@@ -1,15 +1,16 @@
-## This class defines a MediaWiki page. Think of it like this: the bot handles
-## site related stuff, but to take action on a page, you need a page object.
 require 'rwikibot'
 require 'errors'
 
 module Pages
   include RWBErrors
 
+  # This class defines a MediaWiki page, which allows you to perform actions
+  # related to a page, such as to retrieve an existing page or to create a
+  # new one.
   class Page
     attr_reader :title, :namespace, :new, :length, :counter, :lastrevid, :missing
 
-    # Creates a new Page object.
+    # Creates a new Page object. It expects an RWikiBot instance and a title.
     def initialize(bot, title='')
       @bot = bot
       #puts @bot.config
