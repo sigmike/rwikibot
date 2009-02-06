@@ -88,9 +88,9 @@ module RWBUtilities
   def raw_call(headers, post_this)
     request = Net::HTTP::Post.new(@config.fetch('uri').path, headers)
     request.set_form_data(post_this)
-    response = Net::HTTP.new(@config.fetch('uri').host, @config.fetch('uri').port).start {|http|
-      http.request(request)
-    }
+    net = Net::HTTP.new(@config.fetch('uri').host, @config.fetch('uri').port)
+    net.use_ssl = (@config.fetch('uri').scheme == 'https')
+    response = net.start { |http| http.request(request) }
 
     # Extra cookie handling. Because editing will be based on session IDs and it generates
     # a new one each time until you start responding. I doubt this will change.
