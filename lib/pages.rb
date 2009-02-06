@@ -16,11 +16,11 @@ module Pages
       
       info = info(title)
       @title      = info['title']
-      @namespace  = info['ns']
+      @namespace  = info['ns'].to_i
       @new        = info.has_key?('new')
-      @length     = info['length']
-      @counter    = info ['counter']
-      @lastrevid  = info['lastrevid']
+      @length     = info['length'].to_i
+      @counter    = info ['counter'].to_i
+      @lastrevid  = info['lastrevid'].to_i
       @missing    = info.has_key?('missing')
     end
     
