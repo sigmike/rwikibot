@@ -76,6 +76,9 @@ module RWBUtilities
     r = Hash.new
     until post_this.nil?
       return_result, post_this = raw_call(headers, post_this)
+      unless return_result.has_key? action
+        raise "No result found for action #{action.inspect} in result #{return_result.inspect}"
+      end
       r.deep_merge(return_result.fetch(action))
     end
 

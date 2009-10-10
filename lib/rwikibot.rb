@@ -156,6 +156,15 @@ class RWikiBot
 
     make_request('query',post_me).fetch('userinfo')
   end
+  
+  def contributions(user, limit = nil)
+    parameters = {
+      "list" => "usercontribs",
+      "ucuser" => user,
+    }
+    parameters["uclimit"] = limit.to_s if limit
+    make_request('query', parameters).fetch('usercontribs').fetch('item')
+  end
 end
 
 # I'm never happy with good enough, and when it comes to my hashes, I like to see the members of it. So I changed the hash to_s. Overriding method makes me happy.  
