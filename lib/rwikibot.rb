@@ -165,7 +165,12 @@ class RWikiBot
     end
     parameters += [["list", "usercontribs"]]
     parameters = Hash[*parameters.flatten]
-    make_request('query', parameters).fetch('usercontribs').fetch('item')
+    result = make_request('query', parameters).fetch('usercontribs')
+    if result['item']
+      result['item']
+    else
+      []
+    end
   end
 end
 

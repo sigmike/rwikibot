@@ -7,7 +7,7 @@ class TestContributions < Test::Unit::TestCase
     bot.expect_query "query",
       {"list" => "usercontribs", "ucuser" => "Bob"},
       {"usercontribs"=>{"item"=>["foo"]}}
-    bot.contributions(:user => "Bob")
+    assert_equal ["foo"], bot.contributions(:user => "Bob")
   end
 
   def test_contributions_with_all_parameters
@@ -39,8 +39,16 @@ class TestContributions < Test::Unit::TestCase
       bot.expect_query "query",
         expected_parameters,
         {"usercontribs"=>{"item"=>["foo"]}}
-      bot.contributions(hash_parameters)
+      assert_equal ["foo"], bot.contributions(hash_parameters)
     end
+  end
+  
+  def test_contributions_without_result
+    bot = FakeRWikiBot.new 'botuser','botpass','http://wiki.example.com/api.php'
+    bot.expect_query "query",
+      :any,
+      {"usercontribs"=>{}}
+    assert_equal [], bot.contributions(:user => "Bob")
   end
 end
 

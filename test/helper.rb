@@ -19,7 +19,7 @@ class FakeRWikiBot < RWikiBot
       raise "Invalid query. Expected no query but got #{action} with #{parameters.inspect}"
     end
     expected_action, expected_parameters, result = @expected_queries.shift
-    if action != expected_action or parameters != expected_parameters
+    if action != expected_action or (expected_parameters != :any and parameters != expected_parameters)
       raise "Invalid query. Expected #{expected_action} with #{expected_parameters.inspect} but got #{action} with #{parameters.inspect}"
     end
     result
