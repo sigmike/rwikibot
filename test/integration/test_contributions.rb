@@ -7,7 +7,7 @@ PASSWORD = "Di8re0ie"
 class TestIntegrationContributions < Test::Unit::TestCase
   def test_piglobot_contributions
     bot = RWikiBot.new LOGIN, PASSWORD, 'http://fr.wikipedia.org/w/api.php'
-    contributions = bot.contributions("Piglobot", 5)
+    contributions = bot.contributions(:user => "Piglobot", :limit => 5)
     assert_equal 5, contributions.size, contributions.inspect
   end
 end

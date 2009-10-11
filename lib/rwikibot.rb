@@ -157,12 +157,9 @@ class RWikiBot
     make_request('query',post_me).fetch('userinfo')
   end
   
-  def contributions(user, limit = nil)
-    parameters = {
-      "list" => "usercontribs",
-      "ucuser" => user,
-    }
-    parameters["uclimit"] = limit.to_s if limit
+  def contributions(parameters)
+    parameters = [["list", "usercontribs"]] + parameters.map { |param, value| ["uc" + param.to_s, value] }
+    parameters = Hash[*parameters.flatten]
     make_request('query', parameters).fetch('usercontribs').fetch('item')
   end
 end
