@@ -10,6 +10,14 @@ class TestContributions < Test::Unit::TestCase
     assert_equal ["foo"], bot.contributions(:user => "Bob")
   end
 
+  def test_contributions_method_with_user_and_limit
+    bot = FakeRWikiBot.new 'botuser','botpass','http://wiki.example.com/api.php'
+    bot.expect_query "query",
+      {"list" => "usercontribs", "ucuser" => "Bob", "uclimit" => "3"},
+      {"usercontribs"=>{"item"=>["foo"]}}
+    assert_equal ["foo"], bot.contributions(:user => "Bob", :limit => 3)
+  end
+
   def test_contributions_with_all_parameters
     bot = FakeRWikiBot.new 'botuser','botpass','http://wiki.example.com/api.php'
     parameters = %w(

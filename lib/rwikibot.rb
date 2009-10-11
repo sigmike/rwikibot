@@ -161,7 +161,7 @@ class RWikiBot
     parameters = parameters.map do |param, value|
       param = param.to_s
       param = "uc" + param if param !~ /\Auc/
-      [param, value]
+      [param, value.to_s]
     end
     parameters += [["list", "usercontribs"]]
     parameters = Hash[*parameters.flatten]
