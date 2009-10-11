@@ -1,5 +1,7 @@
-module RWBUtilities
+require 'errors'
 
+module RWBUtilities
+  include RWBErrors
 
   def meets_version_requirement(maj, min)
     major, minor = @config['api_version'].to_s.split('.')
