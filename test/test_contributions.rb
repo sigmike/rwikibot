@@ -50,26 +50,5 @@ class TestContributions < Test::Unit::TestCase
       {"usercontribs"=>{}}
     assert_equal [], bot.contributions(:user => "Bob")
   end
-  
-  def test_contributions_timestamp_is_converted_to_datetime
-    item = {
-      "comment"=>"test 2",
-      "size"=>"0",
-      "revid"=>"45649269",
-      "pageid"=>"2074026",
-      "timestamp"=>"2009-10-11T05:30:35Z",
-      "title"=>"Utilisateur:Piglobot/Bac \303\240 sable",
-      "ns"=>"2",
-      "user"=>"Piglobot",
-      "top"=>""
-    }
-
-    bot = FakeRWikiBot.new 'botuser','botpass','http://wiki.example.com/api.php'
-    bot.expect_query "query",
-      :any,
-      {"usercontribs"=>{"item" => [item]}}
-    result = bot.contributions(:user => "Bob").first
-    assert_equal DateTime.new(2009, 10, 11, 5, 30, 35, 0), result["timestamp"]
-  end
 end
 

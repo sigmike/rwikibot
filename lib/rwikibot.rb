@@ -167,12 +167,9 @@ class RWikiBot
     parameters = Hash[*parameters.flatten]
     result = make_request('query', parameters).fetch('usercontribs')
     if result['item']
-      items = result['item']
+      result['item']
     else
-      items = []
-    end
-    items.each do |item|
-      item["timestamp"] = DateTime.parse(item["timestamp"]) if item["timestamp"]
+      []
     end
   end
 end
