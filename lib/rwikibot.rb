@@ -158,7 +158,12 @@ class RWikiBot
   end
   
   def contributions(parameters)
-    parameters = [["list", "usercontribs"]] + parameters.map { |param, value| ["uc" + param.to_s, value] }
+    parameters = parameters.map do |param, value|
+      param = param.to_s
+      param = "uc" + param if param !~ /\Auc/
+      [param, value]
+    end
+    parameters += [["list", "usercontribs"]]
     parameters = Hash[*parameters.flatten]
     make_request('query', parameters).fetch('usercontribs').fetch('item')
   end

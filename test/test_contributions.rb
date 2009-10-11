@@ -27,9 +27,14 @@ class TestContributions < Test::Unit::TestCase
     expected_parameters = [["list", "usercontribs"]] + parameters.map { |param| ["uc" + param, param] }
     expected_parameters = Hash[*expected_parameters.flatten]
     
-    # Test with symbols and strings
-    [:intern, :to_s].each do |method|
-      hash_parameters = parameters.map { |param| [param.send(method), param] }
+    # Test with symbols, strings and "uc" form
+    [
+      proc { |param| param.intern },
+      proc { |param| param },
+      proc { |param| "uc" + param },
+      proc { |param| ("uc" + param).intern },
+    ].each do |block|
+      hash_parameters = parameters.map { |param| [block.call(param), param] }
       hash_parameters = Hash[*hash_parameters.flatten]
       bot.expect_query "query",
         expected_parameters,
