@@ -156,6 +156,25 @@ class RWikiBot
 
     make_request('query',post_me).fetch('userinfo')
   end
+  
+  def contributions(parameters)
+    parameters = parameters.map do |param, value|
+      param = param.to_s
+      param = "uc" + param if param !~ /\Auc/
+      [param, value.to_s]
+    end
+    parameters += [["list", "usercontribs"]]
+    parameters = Hash[*parameters.flatten]
+    result = make_request('query', parameters).fetch('usercontribs')
+    case result['item']
+    when Array
+      result['item']
+    when nil
+      []
+    else
+      [result['item']]
+    end
+  end
 end
 
 # I'm never happy with good enough, and when it comes to my hashes, I like to see the members of it. So I changed the hash to_s. Overriding method makes me happy.  

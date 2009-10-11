@@ -5,10 +5,8 @@ $: << File.join(File.dirname(__FILE__), "..", "lib")
 require 'rwikibot'
 
 class FakeRWikiBot < RWikiBot
-  attr_accessor :requests
-  
   def initialize(*args)
-    @requests = []
+    @expected_queries = []
     super
   end
   
@@ -17,6 +15,17 @@ class FakeRWikiBot < RWikiBot
   end
   
   def make_request(action, parameters)
-    @requests << [action, parameters]
+    if @expected_queries.empty?
+      raise "Invalid query. Expected no query but got #{action} with #{parameters.inspect}"
+    end
+    expected_action, expected_parameters, result = @expected_queries.shift
+    if action != expected_action or (expected_parameters != :any and parameters != expected_parameters)
+      raise "Invalid query. Expected #{expected_action} with #{expected_parameters.inspect} but got #{action} with #{parameters.inspect}"
+    end
+    result
+  end
+  
+  def expect_query(action, parameters, result)
+    @expected_queries << [action, parameters, result]
   end
 end
