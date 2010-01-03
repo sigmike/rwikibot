@@ -1,11 +1,10 @@
-# Override autotest default magic deciding which test to run when
-# a file is changed : enable more flexible naming conventions
-# trading some of the efficiency: we rerun all the tests each time.
-#
-class Autotest
-
-  def tests_for_file(filename)
-    return Dir["test/**/*.rb"]
-  end 
-
+Autotest.add_hook :initialize do  |at|
+  at.add_exception ".git/"
+  at.add_exception "samples/"
+  at.add_exception "rdoc/"
+  at.add_exception "rake/"
+  at.add_exception "pkg/"
+  at.add_mapping(%r{\.rb$}, true) {|f, _|
+    Dir['test/**/*.rb']
+  }
 end
