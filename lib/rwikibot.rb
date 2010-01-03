@@ -175,4 +175,23 @@ class RWikiBot
       [result['item']]
     end
   end
+  
+  def revisions(parameters)
+    parameters = parameters.map do |param, value|
+      param = param.to_s
+      if param != "titles" and param !~ /\Arv/
+        param = "rv" + param
+      end
+      if value.is_a? Array
+        value = value.map { |v| v.to_s }.join("|")
+      else
+        value = value.to_s
+      end
+      [param, value]
+    end
+    parameters += [["prop", "revisions"]]
+    parameters = Hash[*parameters.flatten]
+    result = make_request('query', parameters)
+    result
+  end
 end
