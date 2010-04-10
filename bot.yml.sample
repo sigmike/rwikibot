@@ -1,0 +1,3 @@
+user: My bot user name
+password: My bot password
+api_path: http://fr.wikipedia.org/w/api.php

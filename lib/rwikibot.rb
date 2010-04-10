@@ -156,16 +156,42 @@ class RWikiBot
 
     make_request('query',post_me).fetch('userinfo')
   end
-end
-
-# I'm never happy with good enough, and when it comes to my hashes, I like to see the members of it. So I changed the hash to_s. Overriding method makes me happy.  
-class Hash
-  def to_s
-    out = "{"
-    self.each do |key, value|
-      out += "#{key} => #{value},"
+  
+  def contributions(parameters)
+    parameters = parameters.map do |param, value|
+      param = param.to_s
+      param = "uc" + param if param !~ /\Auc/
+      [param, value.to_s]
     end
-    out = out.chop
-    out += "}"
+    parameters += [["list", "usercontribs"]]
+    parameters = Hash[*parameters.flatten]
+    result = make_request('query', parameters).fetch('usercontribs')
+    case result['item']
+    when Array
+      result['item']
+    when nil
+      []
+    else
+      [result['item']]
+    end
+  end
+  
+  def revisions(parameters)
+    parameters = parameters.map do |param, value|
+      param = param.to_s
+      if param != "titles" and param !~ /\Arv/
+        param = "rv" + param
+      end
+      if value.is_a? Array
+        value = value.map { |v| v.to_s }.join("|")
+      else
+        value = value.to_s
+      end
+      [param, value]
+    end
+    parameters += [["prop", "revisions"]]
+    parameters = Hash[*parameters.flatten]
+    result = make_request('query', parameters)
+    result
   end
 end

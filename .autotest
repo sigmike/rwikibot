@@ -1,0 +1,10 @@
+Autotest.add_hook :initialize do  |at|
+  at.add_exception ".git/"
+  at.add_exception "samples/"
+  at.add_exception "rdoc/"
+  at.add_exception "rake/"
+  at.add_exception "pkg/"
+  at.add_mapping(%r{\.rb$}, true) {|f, _|
+    Dir['test/**/*.rb']
+  }
+end
