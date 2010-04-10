@@ -1,36 +1,33 @@
-## This class defines a MediaWiki page. Think of it like this: the bot handles
-## site related stuff, but to take action on a page, you need a page object.
 require 'rwikibot'
 require 'errors'
 
 module Pages
   include RWBErrors
 
+  # This class defines a MediaWiki page, which allows you to perform actions
+  # related to a page, such as to retrieve an existing page or to create a
+  # new one.
   class Page
     attr_reader :title, :namespace, :new, :length, :counter, :lastrevid, :missing
 
-    # Creates a new Page object.
+    # Creates a new Page object. It expects an RWikiBot instance and a title.
     def initialize(bot, title='')
       @bot = bot
       #puts @bot.config
       
       info = info(title)
       @title      = info['title']
-      @namespace  = info['ns']
+      @namespace  = info['ns'].to_i
       @new        = info.has_key?('new')
-      @length     = info['length']
-      @counter    = info ['counter']
-      @lastrevid  = info['lastrevid']
+      @length     = info['length'].to_i
+      @counter    = info ['counter'].to_i
+      @lastrevid  = info['lastrevid'].to_i
       @missing    = info.has_key?('missing')
     end
     
-    # I used to have an exists method (page_exists), but I got rid of it in 2.0, but I'm bringing it back. 
+    # Whether the page already exists
     def exists?
-      if @missing
-        return false
-      else
-        return true
-      end
+      !@missing
     end
 
     # This will get only the content of the article. It is a modification of
@@ -121,6 +118,11 @@ module Pages
 
       @bot.make_request('move', post_me)
     end # move
+
+    # Flag whether the page is new or not.
+    def new?
+      @new
+    end
     
     # This method is used to protect (and unprotect!) pages. See the API for 
     # possible values. By default, it will lock a page to require sysop level 
