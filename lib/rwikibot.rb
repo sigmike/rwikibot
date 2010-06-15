@@ -65,8 +65,13 @@ class RWikiBot
     if @config.has_key?('domain') && (@config.fetch('domain') != nil)
       post_me['lgdomain'] = @config.fetch('domain')
     end
-
     login_result = make_request('login', post_me)
+
+    if login_result['result'] == "NeedToken"
+      token = login_result['token']
+      post_me['lgtoken'] = token
+      login_result = make_request('login', post_me)
+    end
 
     # Now we need to changed some @config stuff, specifically that we're
     # logged in and the variables of that This will also change the

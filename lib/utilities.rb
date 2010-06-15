@@ -64,11 +64,16 @@ module RWBUtilities
     post_this['format'] = 'xml'
     post_this['action'] = action
 
-    if (@config['logged_in'])
-      cookies = "#{@config['cookieprefix']}UserName=#{@config['lgusername']}; #{@config['cookieprefix']}UserID=#{@config['lguserid']}; #{@config['cookieprefix']}Token=#{@config['lgtoken']}; #{@config['cookieprefix']}_session=#{@config['_session']}"
-    else
-      cookies = ""
+    cookies = []
+    if (@config['_session'])
+      cookies << "#{@config['cookieprefix']}_session=#{@config['_session']}"
     end
+    if (@config['logged_in'])
+      cookies << "#{@config['cookieprefix']}UserName=#{@config['lgusername']}"
+      cookies << "#{@config['cookieprefix']}UserID=#{@config['lguserid']}"
+      cookies << "#{@config['cookieprefix']}Token=#{@config['lgtoken']}"
+    end
+    cookies = cookies.join("; ")
 
     headers =  {
       'User-agent'=>'bot-RWikiBot/2.0-rc1',
@@ -99,8 +104,12 @@ module RWBUtilities
 
     # Extra cookie handling. Because editing will be based on session IDs and it generates
     # a new one each time until you start responding. I doubt this will change.
-    if (response.header['set-cookie'] != nil)
-      @config['_session'] = response.header['set-cookie'].split("=")[1]
+    cookie = response.header['set-cookie']
+    if (cookie != nil)
+      if cookie =~ /(\w+)_session=([\d\w]+);/
+        @config['cookieprefix'] = $1
+        @config['_session'] = $2
+      end
     end
 
     return_result = XmlSimple.xml_in(response.body, { 'ForceArray' => false })
